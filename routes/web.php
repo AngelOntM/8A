@@ -52,8 +52,13 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+Route::get('error/404', function () {
+    return view('errors.404');
+})->name('error.404');
 
-
+Route::fallback(function () {
+    return redirect()->route('error.404');
+});
 
 
 
