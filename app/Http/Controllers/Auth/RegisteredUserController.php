@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
             'g-recaptcha-response' => ['required', new Recaptcha()]
         ]);
 
-        $isAdmin = User::count() === 0;
+        $isAdmin = User::where('admin', 1)->count() === 0;
 
         $user = User::create([
             'name' => $request->name,
@@ -52,14 +52,9 @@ class RegisteredUserController extends Controller
             'admin' => $isAdmin,
         ]);
 
-        if (!$user->admin) {
-            $user->email_verified_at = Carbon::now();
-            $user->save();
-        }
-
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
 
         return redirect(URL::signedRoute(RouteServiceProvider::HOME));
     }

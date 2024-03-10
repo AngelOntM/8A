@@ -16,6 +16,8 @@ use App\Models\User;
 use Closure;
 use Illuminate\Support\Facades\Validator;
 
+use App\Notifications\SendTwoFactorCode;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -36,14 +38,13 @@ class AuthenticatedSessionController extends Controller
         ]);
         
         $request->authenticate();
-
         $request->session()->regenerate();
 
         $user = $request->user();
 
         if ($user->admin) {
-            $user->email_verified_at = null;
-            $user->save();
+            $request->user()->generateTwoFactorCode();
+            $request->user()->notify(new SendTwoFactorCode());
         }
 
         return redirect()->intended(URL::signedRoute(RouteServiceProvider::HOME));

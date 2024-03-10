@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\URL;
 
-
+use App\Http\Controllers\TwoFactorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,11 +21,11 @@ use Illuminate\Support\Facades\URL;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->middleware('guest')->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified', 'signed'])->name('dashboard');
+})->middleware(['auth', 'verified', 'twofactor'])->name('dashboard');
 
 
 Route::middleware(['auth', 'signed', 'verified'])->group(function () {
@@ -42,7 +42,6 @@ Route::get('/email/verify', function () {
  
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
- 
     return redirect('/home');
 })->middleware(['auth', 'signed'])->name('verification.verify');
  
@@ -52,16 +51,12 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-Route::get('error/404', function () {
-    return view('errors.404');
-})->name('error.404');
 
-Route::fallback(function () {
-    return redirect()->route('error.404');
+
+Route::middleware(['auth', 'twofactor'])->group(function () {
+    Route::get('/verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
+    Route::get('/verify', [TwoFactorController::class, 'index'])->name('verify.index');
+    Route::post('/verify', [TwoFactorController::class, 'store'])->name('verify.store');
 });
-
-
-
-
 
 require __DIR__.'/auth.php';
