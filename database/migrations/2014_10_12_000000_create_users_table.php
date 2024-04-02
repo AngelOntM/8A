@@ -19,9 +19,11 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->boolean('admin')->default(false);
+            $table->foreignId('rol_id')->constrained()->default(3);
             $table->string('two_factor_code')->nullable();
             $table->dateTime('two_factor_expires_at')->nullable();
+            $table->string('three_factor_code')->nullable();
+            $table->dateTime('three_factor_expires_at')->nullable();
         });
     }
 

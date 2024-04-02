@@ -38,14 +38,12 @@ class AuthenticatedSessionController extends Controller
         ]);
         
         $request->authenticate();
+        
         $request->session()->regenerate();
 
-        $user = $request->user();
+        $request->user()->generateTwoFactorCode();
 
-        if ($user->admin) {
-            $request->user()->generateTwoFactorCode();
-            $request->user()->notify(new SendTwoFactorCode());
-        }
+        $request->user()->notify(new SendTwoFactorCode());
 
         return redirect()->intended(URL::signedRoute(RouteServiceProvider::HOME));
     }

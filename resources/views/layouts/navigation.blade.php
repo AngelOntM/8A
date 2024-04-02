@@ -12,25 +12,24 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @php
-                        $signedUrl = URL::signedRoute('dashboard');
-                    @endphp
-                    <x-nav-link href="{{ url($signedUrl) }}" :active="request()">
+                    <x-nav-link :href="URL::signedRoute('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="URL::signedRoute('chirps.index')" :active="request()->routeIs('chirps.*')">
+                        {{ __('Chirps') }}
+                    </x-nav-link>
+                    @if (Auth::user()->rol_id == 1)
+                        <x-nav-link :href="URL::signedRoute('users.index')" :active="request()->routeIs('users.*')">
+                            {{ __('Users') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                @if(Auth::user()->admin)
-                    <span class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 ">
-                        Admin
-                    </span>
-                    @else
-                    <span class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 ">
-                        Usuario
-                    </span>
-                @endif
+                <span class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 ">
+                    {{\App\Models\Rol::find(Auth::user()->rol_id)->role}}
+                </span>
             </div>
 
             <!-- Settings Dropdown -->
@@ -38,8 +37,10 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>&nbsp&nbsp
-                            <div>{{ Auth::user()->email }}</div>
+                            <div class="px-4">
+                                <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
+                                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                            </div>
 
 
 
@@ -52,10 +53,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        @php
-                            $signedUrl = URL::signedRoute('profile.edit');
-                        @endphp
-                        <x-dropdown-link :href="$signedUrl">
+                        <x-dropdown-link :href="URL::signedRoute('profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
@@ -88,8 +86,14 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="URL::signedRoute('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="URL::signedRoute('chirps.index')" :active="request()->routeIs('chirps.*')">
+                {{ __('Chirps') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="URL::signedRoute('users.index')" :active="request()->routeIs('users.*')">
+                {{ __('Users') }}
             </x-responsive-nav-link>
         </div>
 
@@ -98,6 +102,7 @@
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-sm text-gray-500">{{\App\Models\Rol::find(Auth::user()->rol_id)->role}}</div>
             </div>
 
             <div class="mt-3 space-y-1">

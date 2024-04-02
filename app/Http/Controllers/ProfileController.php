@@ -20,16 +20,10 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         try {
-            $user = $request->user();
-
-            $signedUrl = URL::signedRoute(
-                'profile.edit', 
-                ['id' => $user->id],
-            );
-
+                        
             Log::channel('custom')->info('Entro a su perfil', ['Usuario' => $request->user()->id]);
             
-            return view('profile.edit', ['signedUrl' => $signedUrl, 'user' => $request->user(),]);
+            return view('profile.edit', ['user' => $request->user()]);
 
         } catch (\Exception $e) {
 

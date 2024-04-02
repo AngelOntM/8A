@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
@@ -38,24 +39,25 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:60'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:60', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'g-recaptcha-response' => ['required', new Recaptcha()]
         ]);
 
-        $isAdmin = User::where('admin', 1)->count() === 0;
+        //$isAdmin = User::where('admin', 1)->count() === 0;
+        $isAdmin = 3;
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'admin' => $isAdmin,
+            'rol_id' => $isAdmin,
         ]);
 
         event(new Registered($user));
 
-        // Auth::login($user);
+        Auth::login($user);
 
-        return redirect(URL::signedRoute(RouteServiceProvider::HOME));
+        return response()->noContent();
     }
 }

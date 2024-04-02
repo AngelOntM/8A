@@ -7,8 +7,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable //implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,7 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'admin',
+        'rol_id',
         'two_factor_code', 
         'two_factor_expires_at',
     ];
@@ -44,22 +46,47 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'is_admin' => 'boolean',
     ];
+
+    public function chirps(): HasMany
+    {
+        return $this->hasMany(Chirp::class);
+    }
+
+    public function rol(): HasOne
+    {
+        return $this->hasOne(Rol::class);
+    }
 
     public function generateTwoFactorCode(): void
     {
-        $this->timestamps = false;  // Prevent updating the 'updated_at' column
-        $this->two_factor_code = rand(100000, 999999);  // Generate a random code
-        $this->two_factor_expires_at = now()->addMinutes(10);  // Set expiration time
+        $this->timestamps = false;  
+        $this->two_factor_code = rand(100000, 999999);  
+        $this->two_factor_expires_at = now()->addMinutes(10);  
         $this->save();
     }
 
     public function resetTwoFactorCode(): void
-{
-    $this->timestamps = false;
-    $this->two_factor_code = null;
-    $this->two_factor_expires_at = null;
-    $this->save();
-}
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = null;
+        $this->two_factor_expires_at = null;
+        $this->save();
+    }
+
+        public function generateThreeFactorCode(): void
+    {
+        $this->timestamps = false;  
+        $this->three_factor_code = rand(100000, 999999);  
+        $this->three_factor_expires_at = now()->addMinutes(10);  
+        $this->save();
+    }
+
+        public function resetThreeFactorCode(): void
+    {
+        $this->timestamps = false;
+        $this->three_factor_code = null;
+        $this->three_factor_expires_at = null;
+        $this->save();
+    }
 }
