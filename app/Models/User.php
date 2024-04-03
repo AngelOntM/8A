@@ -74,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
-        public function generateThreeFactorCode(): void
+    public function generateThreeFactorCode(): void
     {
         $this->timestamps = false;  
         $this->three_factor_code = rand(100000, 999999);  
@@ -82,7 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
-        public function resetThreeFactorCode(): void
+    public function resetThreeFactorCode(): void
     {
         $this->timestamps = false;
         $this->three_factor_code = null;
