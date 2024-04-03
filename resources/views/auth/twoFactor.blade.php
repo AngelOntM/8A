@@ -11,9 +11,9 @@
         <form method="POST" action="{{ route('verify.store') }}">
             @csrf
             <div>
-                <x-input-label for="two_factor_code" :value="__('Codigo')" />
-                <x-text-input id="two_factor_code" class="mt-1 block w-full" type="text" name="two_factor_code" required autofocus />
-                <x-input-error :messages="$errors->get('two_factor_code')" class="mt-2" />
+                <x-input-label for="codigo" :value="__('Codigo')" />
+                <x-text-input id="codigo" class="mt-1 block w-full" type="text" name="codigo" required autofocus />
+                <x-input-error :messages="$errors->get('codigo')" class="mt-2" />
             </div>
             <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('verify.resend') }}">
@@ -24,4 +24,13 @@
                 </x-primary-button>
             </div>
         </form>
+        <div class="-mt-[30px]">
+            <form method="POST" action="{{ route('logout') }}" >
+                @csrf
+                <a :href="route('logout')" onclick="event.preventDefault();
+                    this.closest('form').submit();" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 cursor-pointer">
+                    {{ __('Logout') }}
+                </a>
+            </form>
+        </div>
 </x-guest-layout>

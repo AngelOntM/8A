@@ -21,5 +21,6 @@ class VpnAccessMiddleware
                 'email' => trans('auth.failed'),
             ]);
         }
+        return $next($request);
     }
 }

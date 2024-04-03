@@ -29,13 +29,13 @@ class TwoFactorController extends Controller
     public function store(Request $request): ValidationException|RedirectResponse
     {
         $request->validate([
-            'two_factor_code' => ['integer', 'required', 'digits:6'],
+            'codigo' => ['integer', 'required', 'digits:6'],
         ]);
         $user = auth()->user();
 
-        if ((int)$request->input('two_factor_code') !== (int)$user->two_factor_code) {
+        if ((int)$request->input('codigo') !== (int)$user->two_factor_code) {
             throw ValidationException::withMessages([
-                'two_factor_code' => __('Codigo incorrecto'),
+                'codigo' => __('Codigo incorrecto'),
             ]);
         }
         $user->resetTwoFactorCode();
@@ -48,7 +48,6 @@ class TwoFactorController extends Controller
         if ($user->rol_id == 1) { 
             $user->generateThreeFactorCode();
             $user->notify(new SendThreeFactorCode());
-            return redirect()->back()->withStatus(__('El codigo ha sido reenviado'));
         }
         $user->generateTwoFactorCode();
         $user->notify(new SendTwoFactorCode());

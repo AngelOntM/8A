@@ -50,9 +50,9 @@ class AuthenticatedSessionController extends Controller
         
         $request->authenticate();
 
-        $user = $request->user(); 
-
         $request->session()->regenerate();
+
+        $user = $request->user(); 
 
         if ($user->rol_id == 1) { 
             return $this->adminLogin($request);
