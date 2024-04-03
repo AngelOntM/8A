@@ -8,9 +8,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class User extends Authenticatable //implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -53,9 +53,9 @@ class User extends Authenticatable //implements MustVerifyEmail
         return $this->hasMany(Chirp::class);
     }
 
-    public function rol(): HasOne
+    public function rol(): BelongsTo
     {
-        return $this->hasOne(Rol::class);
+        return $this->belongsTo(Rol::class);
     }
 
     public function generateTwoFactorCode(): void

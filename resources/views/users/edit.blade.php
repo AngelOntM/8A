@@ -23,9 +23,9 @@
                         </div>
                         <div>
                             <x-input-label for="rol_id" :value="__('Rol')" />
-                            <select class="bg-transparent rounded-lg my-4 block" name="rol_id" id="rol_id" required>
+                            <select class="bg-transparent rounded-md my-4 block border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 shadow-sm" name="rol_id" id="rol_id" required>
                                 @foreach ($rols as $rol)
-                                    <option class="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800" value="{{ $rol->id }}" {{ ($user->rol_id == $rol->id) ? 'selected' : '' }}>{{ $rol->role }}</option>
+                                    <option class="text-gray-900 dark:text-gray-300 bg-white dark:bg-gray-900" value="{{ $rol->id }}" {{ ($user->rol_id == $rol->id) ? 'selected' : '' }}>{{ $rol->role }}</option>
                                 @endforeach
                             </select>
                         </div>

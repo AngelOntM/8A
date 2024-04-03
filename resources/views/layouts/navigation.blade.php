@@ -28,7 +28,7 @@
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <span class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 ">
-                    {{\App\Models\Rol::find(Auth::user()->rol_id)->role}}
+                    {{Auth::user()->rol->role}}
                 </span>
             </div>
 
@@ -92,9 +92,11 @@
             <x-responsive-nav-link :href="URL::signedRoute('chirps.index')" :active="request()->routeIs('chirps.*')">
                 {{ __('Chirps') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="URL::signedRoute('users.index')" :active="request()->routeIs('users.*')">
-                {{ __('Users') }}
-            </x-responsive-nav-link>
+            @if (Auth::user()->rol_id == 1)
+                <x-responsive-nav-link :href="URL::signedRoute('users.index')" :active="request()->routeIs('users.*')">
+                    {{ __('Users') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
@@ -102,7 +104,7 @@
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                <div class="font-medium text-sm text-gray-500">{{\App\Models\Rol::find(Auth::user()->rol_id)->role}}</div>
+                <div class="font-medium text-sm text-gray-500">{{Auth::user()->rol->role}}</div>
             </div>
 
             <div class="mt-3 space-y-1">

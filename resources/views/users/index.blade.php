@@ -35,7 +35,7 @@
                                         {{ $user->email }}
                                     </span>
                                     <span class="text-md text-gray-900 dark:text-gray-100">
-                                        {{ \App\Models\Rol::find($user->rol_id)->role }}
+                                        {{ $user->rol->role }}
                                     </span>
                                 </div>
                             </div>
