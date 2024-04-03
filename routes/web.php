@@ -23,14 +23,14 @@ use App\Http\Controllers\TwoFactorController;
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware('guest')->name('welcome');
+})->middleware(['guest', 'vpn.access'])->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified', 'twofactor'])->name('dashboard');
+})->middleware(['auth', 'verified', 'twofactor', 'threefactor', 'vpn.access'])->name('dashboard');
 
 
-Route::middleware(['auth', 'signed', 'verified', 'twofactor'])->group(function () {
+Route::middleware(['auth', 'signed', 'verified', 'twofactor', 'threefactor', 'vpn.access'])->group(function () {
     Route::get('/chirps', [ChirpController::class, 'index'])->name('chirps.index');
     Route::post('/chirps', [ChirpController::class, 'store'])->middleware('adminorcoor')->name('chirps.store');
     Route::get('/chirps/{chirp}/edit', [ChirpController::class, 'edit'])->middleware('adminorcoor')->name('chirps.edit');
@@ -39,7 +39,7 @@ Route::middleware(['auth', 'signed', 'verified', 'twofactor'])->group(function (
 });
 
 
-Route::middleware(['auth', 'signed', 'verified', 'twofactor'])->group(function () {
+Route::middleware(['auth', 'signed', 'verified', 'twofactor', 'threefactor', 'vpn.access'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->middleware('admin')->name('users.index');
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->middleware('admin')->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->middleware('admin')->name('users.update');
@@ -49,7 +49,7 @@ Route::middleware(['auth', 'signed', 'verified', 'twofactor'])->group(function (
 });
 
 
-Route::middleware(['auth', 'signed', 'verified', 'twofactor'])->group(function () {
+Route::middleware(['auth', 'signed', 'verified', 'twofactor', 'threefactor', 'vpn.access'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -74,7 +74,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 
 
 
-Route::middleware(['auth', 'verified', 'twofactor'])->group(function () {
+Route::middleware(['auth', 'verified', 'twofactor', 'threefactor', 'vpn.access'])->group(function () {
     Route::get('/verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');
     Route::get('/verify', [TwoFactorController::class, 'index'])->name('verify.index');
     Route::post('/verify', [TwoFactorController::class, 'store'])->name('verify.store');

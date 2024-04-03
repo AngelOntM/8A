@@ -58,10 +58,25 @@ class ApiController extends Controller
         return response(["message"=>"Cierre de sesión OK"], Response::HTTP_OK);
     }
 
-    public function allUsers() {
-       $users = User::all();
-       return response()->json([
-        "users" => $users
-       ]);
+    public function userThreeFactorCode(Request $request) {
+
+        $user = auth()->user();
+        
+        $request->validate([
+            'three_factor_code' => ['integer', 'required'],
+        ]);
+
+        if ($request->input('three_factor_code') !== $user->three_factor_code) {
+            return response()->json([
+                "message" => "Codigo incorrecto"
+            ], Response::HTTP_BAD_REQUEST);
+        }else{
+            $user->resetThreeFactorCode();
+            $user->generateTwoFactorCode();
+            return response()->json([
+                "message" => "Codigo correcto",
+                "two_factor_code" => $user->two_factor_code,
+            ], Response::HTTP_OK);
+        }
     }
 }

@@ -78,7 +78,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->timestamps = false;  
         $this->three_factor_code = rand(100000, 999999);  
-        $this->three_factor_expires_at = now()->addMinutes(10);  
+        $this->three_factor_expires_at = now()->addMinutes(10);
+        $this->resetTwoFactorCode();  
         $this->save();
     }
 
@@ -87,6 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->timestamps = false;
         $this->three_factor_code = null;
         $this->three_factor_expires_at = null;
+        $this->resetTwoFactorCode();
         $this->save();
     }
 }

@@ -14,6 +14,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 
 use App\Notifications\SendTwoFactorCode;
+use App\Notifications\SendThreeFactorCode;
 
 use Illuminate\Validation\ValidationException;
 
@@ -28,10 +29,11 @@ class TwoFactorController extends Controller
     public function store(Request $request): ValidationException|RedirectResponse
     {
         $request->validate([
-            'two_factor_code' => ['integer', 'required'],
+            'two_factor_code' => ['integer', 'required', 'digits:6'],
         ]);
         $user = auth()->user();
-        if ($request->input('two_factor_code') !== $user->two_factor_code) {
+
+        if ((int)$request->input('two_factor_code') !== (int)$user->two_factor_code) {
             throw ValidationException::withMessages([
                 'two_factor_code' => __('Codigo incorrecto'),
             ]);
@@ -43,6 +45,11 @@ class TwoFactorController extends Controller
     public function resend(): RedirectResponse
     {
         $user = auth()->user();
+        if ($user->rol_id == 1) { 
+            $user->generateThreeFactorCode();
+            $user->notify(new SendThreeFactorCode());
+            return redirect()->back()->withStatus(__('El codigo ha sido reenviado'));
+        }
         $user->generateTwoFactorCode();
         $user->notify(new SendTwoFactorCode());
         return redirect()->back()->withStatus(__('El codigo ha sido reenviado'));

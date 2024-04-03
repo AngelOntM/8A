@@ -20,6 +20,5 @@ Route::post('/login', [ApiController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user-profile', [ApiController::class, 'userProfile']);
     Route::post('/logout', [ApiController::class, 'logout']);
+    Route::post('/userThreeFactorCode', [ApiController::class, 'userThreeFactorCode']);
 });
-
-Route::get('/users', [ApiController::class, 'allUsers'])->middleware('auth:sanctum');

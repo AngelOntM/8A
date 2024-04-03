@@ -17,6 +17,7 @@ use Closure;
 use Illuminate\Support\Facades\Validator;
 
 use App\Notifications\SendTwoFactorCode;
+use App\Notifications\SendThreeFactorCode;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -26,6 +27,16 @@ class AuthenticatedSessionController extends Controller
     public function create(): View
     {
         return view('auth.login');
+    }
+
+    public function adminLogin(Request $request)
+    {
+        $request->user()->generateThreeFactorCode();
+
+        $request->user()->notify(new SendThreeFactorCode());
+        
+        return redirect()->intended(URL::signedRoute(RouteServiceProvider::HOME));
+
     }
 
     /**
@@ -38,8 +49,14 @@ class AuthenticatedSessionController extends Controller
         ]);
         
         $request->authenticate();
-        
+
+        $user = $request->user(); 
+
         $request->session()->regenerate();
+
+        if ($user->rol_id == 1) { 
+            return $this->adminLogin($request);
+        }
 
         $request->user()->generateTwoFactorCode();
 
