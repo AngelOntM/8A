@@ -73,8 +73,24 @@ class UserController extends Controller
             ->with('status', __('Password updated successfully!'));
     }
 
-    public function destroy(User $user)
+    public function delete(User $user)
     {
+        return view('users.delete', [
+            'user' => $user,
+        ]);
+    }
+
+    public function destroy(Request $request, User $user)
+    {
+        $request->validateWithBag('userDeletion', [
+            'name' => ['required', 'string', 'max:60'],
+        ]);
+
+        if ($request->input('name') !== $user->name) {
+            return redirect()->back()->withErrors([
+                'name' => __('The provided name does not match our records.'),
+            ]);
+        }
 
         $user->delete();
 

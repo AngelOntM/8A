@@ -48,6 +48,7 @@ class TwoFactorController extends Controller
         if ($user->rol_id == 1) { 
             $user->generateThreeFactorCode();
             $user->notify(new SendThreeFactorCode());
+            return redirect()->back()->withStatus(__('El codigo ha sido reenviado'));
         }
         $user->generateTwoFactorCode();
         $user->notify(new SendTwoFactorCode());

@@ -21,6 +21,10 @@ use App\Notifications\SendThreeFactorCode;
 
 class AuthenticatedSessionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('vpn.access')->only('adminLogin');
+    }
     /**
      * Display the login view.
      */
@@ -30,13 +34,15 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function adminLogin(Request $request)
-    {
-        $request->user()->generateThreeFactorCode();
+    {    
+        if ($request->user()->rol_id == 1) { 
 
-        $request->user()->notify(new SendThreeFactorCode());
+            $request->user()->generateThreeFactorCode();
+            $request->user()->notify(new SendThreeFactorCode());
+
+        }    
         
         return redirect()->intended(URL::signedRoute(RouteServiceProvider::HOME));
-
     }
 
     /**
@@ -52,10 +58,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $user = $request->user(); 
-
-        if ($user->rol_id == 1) { 
-            return $this->adminLogin($request);
+        if ($request->user()->rol_id == 1) { 
+            return redirect('/admin-login');
         }
 
         $request->user()->generateTwoFactorCode();
@@ -70,6 +74,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $request->user()->resetThreeFactorCode();
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

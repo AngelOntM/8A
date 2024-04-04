@@ -45,6 +45,7 @@ Route::middleware(['auth', 'signed', 'threefactor', 'vpn.access', 'verified', 't
     Route::put('/users/{user}', [UserController::class, 'update'])->middleware('admin')->name('users.update');
     Route::get('/users/{user}/editpassword', [UserController::class, 'editpassword'])->middleware('admin')->name('users.editpassword');
     Route::put('/userpassword/{user}', [UserController::class, 'updatepassword'])->middleware('admin')->name('users.updatepassword');
+    Route::get('/users/{user}/delete', [UserController::class, 'delete'])->middleware('admin')->name('users.delete');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware('admin')->name('users.destroy');
 });
 
@@ -55,24 +56,21 @@ Route::middleware(['auth', 'signed', 'threefactor', 'vpn.access', 'verified', 't
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
-
-Route::get('/email/verify', function () {
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', function () {
     return view('auth.verify-email');
-})->middleware('auth')->name('verification.notice');
- 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-    return redirect('/home');
-})->middleware(['auth', 'signed'])->name('verification.verify');
- 
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
- 
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+    })->name('verification.notice');
 
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+        return redirect('/home');
+    })->middleware('signed')->name('verification.verify');
 
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('message', 'Verification link sent!');
+    })->middleware('throttle:6,1')->name('verification.send');
+});
 
 Route::middleware(['auth', 'threefactor', 'vpn.access', 'verified', 'twofactor'])->group(function () {
     Route::get('/verify/resend', [TwoFactorController::class, 'resend'])->name('verify.resend');

@@ -36,6 +36,8 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/admin-login', [AuthenticatedSessionController::class, 'adminLogin'])->middleware('vpn.access');
+
     Route::get('verify-email', EmailVerificationPromptController::class)
                 ->name('verification.notice');
 

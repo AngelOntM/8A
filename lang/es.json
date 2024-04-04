@@ -249,5 +249,8 @@
     "Edit User": "Editar Usuario",
     "User updated successfully!": "Usuario actualizado exitosamente!",
     "User deleted successfully!": "Usuario eliminado exitosamente!",
-    "Delete User": "Eliminar Usuario"
+    "Delete User": "Eliminar Usuario",
+    "Are you sure you want to delete this user?": "¿Está seguro que desea eliminar este usuario?",
+    "Enter the name of the user": "Ingrese el nombre del usuario",
+    "The provided name does not match our records.": "El nombre proporcionado no coincide con nuestros registros."
 }
