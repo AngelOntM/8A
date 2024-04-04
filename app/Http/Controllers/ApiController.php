@@ -20,6 +20,7 @@ class ApiController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $user->tokens()->delete();
             $token = $user->createToken('token')->plainTextToken;
             return response(["token"=>$token], Response::HTTP_OK);
         } else {

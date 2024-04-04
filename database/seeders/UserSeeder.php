@@ -23,5 +23,14 @@ class UserSeeder extends Seeder
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
         ]);
+        
+        DB::table('users')->insert([
+            'name' => 'Gerardo Gallegos Plata',
+            'email' => 'gerardogplata@gmail.com',
+            'password' => Hash::make('12345'),
+            'rol_id' => 1,
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
     }
 }
