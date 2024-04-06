@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\TwoFactorController;
 /*
@@ -26,6 +27,7 @@ Route::get('/', function () {
 })->middleware(['guest'])->name('welcome');
 
 Route::get('/dashboard', function () {
+    echo DB::getDefaultConnection();
     return view('dashboard');
 })->middleware(['auth', 'verified', 'threefactor', 'vpn.access', 'twofactor'])->name('dashboard');
 
