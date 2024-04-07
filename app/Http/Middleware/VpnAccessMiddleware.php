@@ -12,7 +12,7 @@ class VpnAccessMiddleware
 {
     public function handle($request, Closure $next)
     {
-        $allowedIpAddresses = ['127.0.0.1'];
+        $allowedIpAddresses = ['127.0.0.1', '10.0.0.2', '10.0.0.3', '10.0.1.2'];
         if ($request->user() && $request->user()->rol_id == 1) {
             if (in_array($request->ip(), $allowedIpAddresses)) {
                 return $next($request);
