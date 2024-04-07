@@ -13,10 +13,8 @@ class VpnAccessMiddleware
     public function handle($request, Closure $next)
     {
         $allowedIpAddresses = ['127.0.0.1'];
-        //$allowedIpAddresses = ['10.8.0.1'];
         if ($request->user() && $request->user()->rol_id == 1) {
             if (in_array($request->ip(), $allowedIpAddresses)) {
-                DB::setDefaultConnection('vpn_connection');
                 return $next($request);
             }
             $request->user()->resetThreeFactorCode();
@@ -24,20 +22,6 @@ class VpnAccessMiddleware
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
-        }
-        elseif ($request->user() && $request->user()->rol_id == 2) {
-            if (in_array($request->ip(), $allowedIpAddresses)) {
-                DB::setDefaultConnection('vpn_connection');
-                return $next($request);
-            }
-            else {
-                DB::setDefaultConnection('public_connection');
-                return $next($request);
-            }
-        }
-        elseif ($request->user() && $request->user()->rol_id == 3) {
-            DB::setDefaultConnection('public_connection');
-            return $next($request);
         }
         return $next($request);
     }

@@ -19,6 +19,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $clientIp = request()->ip();
+
+        if ($clientIp === '127.0.0.1') {
+            config(['database.default' => 'vpn_connection']);
+        } else {
+            config(['database.default' => 'public_connection']);
+        }
     }
 }
