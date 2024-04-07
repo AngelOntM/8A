@@ -50,9 +50,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->validate([
+        $allowedIpAddresses = ['127.0.0.2'];
+        if (in_array($request->ip(), $allowedIpAddresses)) {
+            $request->validate([
             'g-recaptcha-response' => ['required', new Recaptcha()]
-        ]);
+            ]);
+        }
+        
         
         $request->authenticate();
 

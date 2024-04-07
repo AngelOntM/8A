@@ -20,9 +20,14 @@ class ApiController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            if ($user->rol_id != 1) {
+                return response(["message"=> "Usuario no autorizado"],Response::HTTP_UNAUTHORIZED);
+            }
             $user->tokens()->delete();
             $token = $user->createToken('token')->plainTextToken;
-            return response(["token"=>$token], Response::HTTP_OK);
+            return response(["message"=> "Login OK",
+                "token"=>$token
+            ], Response::HTTP_OK);
         } else {
             return response(["message"=> "Credenciales inválidas"],Response::HTTP_UNAUTHORIZED);
         }        
