@@ -27,7 +27,7 @@ Route::get('/', function () {
 })->middleware(['guest'])->name('welcome');
 
 Route::get('/dashboard', function () {
-    echo DB::getDefaultConnection();
+    //echo DB::getDefaultConnection();
     return view('dashboard');
 })->middleware(['auth', 'verified', 'threefactor', 'vpn.access', 'twofactor'])->name('dashboard');
 
